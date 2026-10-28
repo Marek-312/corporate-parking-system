@@ -1,24 +1,26 @@
-import column{Column,Entity,OneToMany,PrimaryGeneratedColumn}from 'typeorm';
-import {User} from '../users/user.entity';
-export enum UserRole{
-    SUPER="super admin",
-    COMPANYADMIN="company admin",
-    EMPLOYEE="employee"
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Company } from '../companies/company.entity';
+
+export enum Role {
+  SuperAdmin = 'super_admin',
+  CompanyAdmin = 'company_admin',
+  Employee = 'employee',
 }
-@Entity
-export class User{
-    @PrimaryGeneratedColumn()
-    id:number;
-    @Column({unique:true})
-    email:string;
-    @Column()
-    passwordHash:string;
-    @Column({
-        type: "enum",
-        enum: UserRole,
-        default: UserRole.EMPLOYEE,
-    })
-    role:UserRole;    
-    @ManyToOne(()=>Company,(company)=>company.user, { onDelete: 'CASCADE' })
-    company:Company;
+
+@Entity()
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column()
+  passwordHash: string;
+
+  @Column({ type: 'enum', enum: Role, default: Role.Employee })
+  role: Role;
+
+  @ManyToOne(() => Company, (company) => company.users, { onDelete: 'CASCADE' })
+  company: Company;
 }

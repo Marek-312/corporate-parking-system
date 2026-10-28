@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ModuleModule } from './companies/module/module.module.js';
+import { ModuleModule } from './users/module/module.module.js';
 
 
 @Module({
@@ -19,6 +21,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         synchronize: true,
       }),
     }),
+    ModuleModule,
   ],
 })
 export class AppModule {}
