@@ -12,13 +12,13 @@ export class User{
     @Column({unique:true})
     email:string;
     @Column()
-    passwordHash:byte;
+    passwordHash:string;
     @Column({
         type: "enum",
         enum: UserRole,
         default: UserRole.EMPLOYEE,
     })
     role:UserRole;    
-    @ManyToOne(()=>Company,(company)=>company.users)
+    @ManyToOne(()=>Company,(company)=>company.user, { onDelete: 'CASCADE' })
     company:Company;
 }
