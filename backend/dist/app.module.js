@@ -7,6 +7,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ModuleModuleCompany } from './companies/module/module.module.js';
+import { ModuleModuleUser } from './users/module/module.module.js';
+import { UsersModule } from './users/users.module.js';
+import { CompaniesModule } from './companies/companies.module.js';
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -26,6 +30,10 @@ AppModule = __decorate([
                     synchronize: true,
                 }),
             }),
+            ModuleModuleUser,
+            ModuleModuleCompany,
+            UsersModule,
+            CompaniesModule,
         ],
     })
 ], AppModule);

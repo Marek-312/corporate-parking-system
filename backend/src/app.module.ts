@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ModuleModule } from './companies/module/module.module.js';
-import { ModuleModule } from './users/module/module.module.js';
+import { ModuleModuleCompany } from './companies/module/module.module.js';
+import { ModuleModuleUser } from './users/module/module.module.js';
+import { UsersModule } from './users/users.module.js';
+import { CompaniesModule } from './companies/companies.module.js';
 
 
 @Module({
@@ -21,7 +22,10 @@ import { ModuleModule } from './users/module/module.module.js';
         synchronize: true,
       }),
     }),
-    ModuleModule,
+    ModuleModuleUser,
+    ModuleModuleCompany,
+    UsersModule,
+    CompaniesModule,
   ],
 })
 export class AppModule {}
