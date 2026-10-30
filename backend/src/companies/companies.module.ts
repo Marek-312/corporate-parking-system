@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
-import { Company } from './company.entity';
+import { CompaniesController } from './companies.controller.js';
+import { CompaniesService } from './companies.service.js';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([Company])],
+  controllers: [CompaniesController],
+  providers: [CompaniesService],
 })
 export class CompaniesModule {}
