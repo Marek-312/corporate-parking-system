@@ -8,16 +8,21 @@ import { PrismaModule } from '../prisma/prisma.module.js';
 export const jwtSecret = 'zjP9h6ZI5LoSKCRj';
 @Module({
   imports:[
-    PrismaModule,
-    AuthService,
-    AuthController,
-    PassportModule,
-    JwtModule.register({
+      JwtModule.register({
       secret:jwtSecret,
       signOptions:{expiresIn:'5m'},
     })
   ],
   controllers: [AuthController,],
-  providers: [AuthService,],
+  providers: [AuthService,
+     PrismaModule,
+    AuthController,
+    PassportModule
+  ],
+  exports:[AuthService,
+     PrismaModule,
+    AuthController,
+    PassportModule
+  ]
 })
 export class AuthModule {}
