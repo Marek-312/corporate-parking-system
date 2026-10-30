@@ -33,6 +33,7 @@ model User{
   id Int @id @default(autoincrement())
   email String @unique
   passwordHash String
+  name String?
   role Role @default(EMPLOYEE)
   companyId Int 
   company Company @relation(fields:[companyId],references:[id],onDelete:Cascade)
