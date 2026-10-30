@@ -5,35 +5,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 import { ModuleModuleCompany } from './companies/module/module.module.js';
 import { ModuleModuleUser } from './users/module/module.module.js';
 import { UsersModule } from './users/users.module.js';
 import { CompaniesModule } from './companies/companies.module.js';
+import { PrismaModule } from './prisma/prisma.module.js';
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     Module({
         imports: [
             ConfigModule.forRoot({ isGlobal: true, envFilePath: '../.env' }),
-            TypeOrmModule.forRootAsync({
-                inject: [ConfigService],
-                useFactory: (config) => ({
-                    type: 'postgres',
-                    host: 'localhost',
-                    port: 5433,
-                    username: config.get('POSTGRES_USER'),
-                    password: config.get('POSTGRES_PASSWORD'),
-                    database: config.get('POSTGRES_DB'),
-                    autoLoadEntities: true,
-                    synchronize: true,
-                }),
-            }),
             ModuleModuleUser,
             ModuleModuleCompany,
             UsersModule,
             CompaniesModule,
+            PrismaModule,
         ],
     })
 ], AppModule);

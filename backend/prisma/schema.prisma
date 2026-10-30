@@ -2,12 +2,82 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 // Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+enum Role {
+  SUPER_ADMIN
+  COMPANY_ADMIN
+  EMPLOYEE
+}
+enum SpotStatus {
+  FREE
+  RESERVED
+  MAINTENANCE
+}
+model Company{
+  id Int @id @default(autoincrement())
+  name String
+  taxNumber String @unique
+  address String
+  users User[]
+  zones ParkingZone[]
+  vehicles Vehicle[]
+}
+model User{
+  id Int @id @default(autoincrement())
+  email String @unique
+  passwordHash String
+  role Role @default(EMPLOYEE)
+  companyId Int 
+  company Company @relation(fields:[companyId],references:[id],onDelete:Cascade)
+  vehicles Vehicle[]
+}
+model ParkingZone{
+  id Int @id @default(autoincrement())
+  name String
+  floor Int
+  gridWidth Int
+  gridHeight Int
+  companyId Int 
+  company Company @relation(fields:[companyId],references:[id],onDelete:Cascade)
+  parkingSpots ParkingSpot[]
+}
+model ParkingSpot{
+  id Int @id @default(autoincrement())
+  spotNumber String
+  positionX Int
+  positionY Int 
+  blockedStatus SpotStatus @default(FREE)
+  zoneId Int 
+  zone ParkingZone @relation(fields:[zoneId],references:[id],onDelete:Cascade)
+  sessions ParkingSession[]
+  @@unique([zoneId, spotNumber])
+}
+model Vehicle{
+  id Int @id @default(autoincrement())
+  brand String
+  model String
+  licensePlate String
+  color String
+  companyId Int 
+  company Company @relation(fields:[companyId],references:[id],onDelete:Cascade)
+  driver User? @relation(fields:[driverId],references:[id])
+  driverId Int?
+  sessions ParkingSession[]
+  @@unique([companyId, licensePlate])
+}
+model ParkingSession{
+  id Int @id @default(autoincrement())
+  entryTime DateTime @default(now())
+  exitTime DateTime?
+  spot ParkingSpot @relation(fields:[spotId],references:[id],onDelete:Cascade)
+  spotId Int 
+  vehicle Vehicle @relation(fields:[vehicleId],references:[id],onDelete:Cascade)
+  vehicleId Int 
 }
