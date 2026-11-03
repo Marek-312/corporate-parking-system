@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto.js';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto.js';
+import { AuthEntity } from './entity/auth.entity.js';
 @Injectable()
 export class AuthService {
     constructor(
@@ -33,7 +34,7 @@ export class AuthService {
     const { passwordHash, ...result } = user;
     return result;
   }
-    async login(dto:LoginDto){
+    async login(dto:LoginDto):Promise<AuthEntity>{
         const existingUser=await this.prisma.user.findUnique({
             where:{email:dto.email}
         })
@@ -50,7 +51,7 @@ export class AuthService {
         const payload={sub:existingUser.id,email:existingUser.email};
         const accesToken=this.jwtService.sign(payload);
         return{
-            accesToken:accesToken,
+              accessToken: this.jwtService.sign({ userId: existingUser.id }),
         };
     }
 }   
