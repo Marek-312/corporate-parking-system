@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ParkingZonesController } from './parking-zones.controller.js';
-
+import { ParkingZoneDTO } from './DTO/parking-zones-dto.js';
 describe('ParkingZonesController', () => {
   let controller: ParkingZonesController;
 
