@@ -8,9 +8,9 @@ export class ParkingZonesService {
     constructor(private readonly prismaService:PrismaService){
 
     }
-    async  CreateNewZone(dto:ParkingZoneDTO):Promise<ParkingZone>{
+    async  CreateNewZone(companyID:number,dto:ParkingZoneDTO):Promise<ParkingZone>{
          const existingCompany=await this.prismaService.company.findUnique({
-            where:{id:dto.companyID}
+            where:{id:companyID}
          });         
          if(!existingCompany){
             throw new BadRequestException('Ova kompanija ne postoji');
@@ -22,7 +22,7 @@ export class ParkingZonesService {
                 floor:dto.floor,
                 gridHeight:dto.gridHeight,
                 gridWidth:dto.gridWidth,
-                companyId:dto.companyID
+                companyId:companyID
 
                 },
             },
