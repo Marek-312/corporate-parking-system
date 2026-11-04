@@ -14,7 +14,5 @@ export class ParkingZoneDTO{
     @IsNumber()
     @IsNotEmpty()
     gridHeight:number;
-    @IsNumber()
-    @IsNotEmpty()
-    companyID:number;
+   
 }
