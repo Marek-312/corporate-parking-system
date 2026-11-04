@@ -4,7 +4,7 @@ export class ParkingZoneDTO{
     
     @IsString()
     @IsNotEmpty()
-    name:String;
+    name:string;
     @IsNotEmpty()
     @IsNumber()
     floor:number;
