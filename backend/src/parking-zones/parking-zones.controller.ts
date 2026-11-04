@@ -8,7 +8,7 @@ import { ParkingZone } from '@prisma/client';
 @ApiTags('parking-zones/CRUD')
 export class ParkingZonesController {
     constructor(private readonly service:ParkingZonesService){}
-    @Post('create-ParkingZone')
+    @Post('parking-zones')
     async createParkingZone(@Body() dto:ParkingZoneDTO):Promise<ParkingZone>{
         return await this.service.CreateNewZone(dto);
     }
