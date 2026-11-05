@@ -1,9 +1,10 @@
-import { Controller, Post,Body, UseGuards,Request} from '@nestjs/common';
+import { Controller, Post,Body, UseGuards,Request, Get} from '@nestjs/common';
 import { ParkingZoneDTO } from './DTO/parking-zones-dto.js';
 import { ApiTags } from '@nestjs/swagger';
 import { ParkingZonesService } from './parking-zones.service.js';
 import { ParkingZone, User } from '@prisma/client';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
+
 
 interface AuthenticatedRequest {
   user: { userId: number; companyId: number; role: string };
@@ -18,6 +19,14 @@ export class ParkingZonesController {
     @Post('parking-zones')
     async createParkingZone(@Request() req:AuthenticatedRequest ,@Body() dto:ParkingZoneDTO):Promise<ParkingZone>{
         return await this.service.CreateNewZone(req.user.companyId,dto);
+    }
+    @Get('parking-zones')
+    async getParkingZone(@Request() req:AuthenticatedRequest):Promise<ParkingZone>{
+        return await this.service.GetParkingZone(req.user.userId,req.user.companyId);
+    }
+    @Get('parking-zones')
+    async updateParkingZone(@Request() req:AuthenticatedRequest,@Body() dto:ParkingZoneDTO):Promise<ParkingZone>{
+        return await this.service.UpdateParkingZone(req.user.userId,req.user.companyId,dto);
     }
 
 }
