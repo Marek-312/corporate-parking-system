@@ -1,8 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+    app.enableCors({ origin: 'http://localhost:4200' });
     const config = new DocumentBuilder()
         .setTitle('My API')
         .setDescription('API documentation')
