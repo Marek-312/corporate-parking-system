@@ -10,12 +10,7 @@ export class ParkingZonesService {
 
     }
     async  CreateNewZone(companyID:number,dto:ParkingZoneDTO):Promise<ParkingZone>{
-         const existingCompany=await this.prismaService.company.findUnique({
-            where:{id:companyID}
-         });         
-         if(!existingCompany){
-            throw new BadRequestException('Ova kompanija ne postoji');
-         }      
+             
          const parkingZone=this.prismaService.parkingZone.create(
             {
                 data:{
@@ -40,14 +35,11 @@ export class ParkingZonesService {
     }
     async GetAllParkingZones(companyID:number):Promise<ParkingZone[]>{
         const parkingZones=await this.prismaService.parkingZone.findMany({where:{companyId:companyID}});
-        if(parkingZones.length===0){
-
-            throw new NotFoundException("This company has no parking zones");
-        }
+      
         return parkingZones;
     }
     async UpdateParkingZone(companyId: number, id: number, dto: ParkingZoneDTO):Promise<ParkingZone>{
-        const parkingZone=await this.prismaService.parkingZone.findFirst({where:{id:id,companyId:companyId}});
+        const parkingZone=await this.prismaService.parkingZone.findFirst({where:{id,companyId:companyId}});
          if(!parkingZone){
             throw new NotFoundException('There is no such parking zone,or no such parking zone for that parking');
         }
