@@ -57,5 +57,13 @@ export class ParkingZonesService {
        
         return updatedUser;
     }
+    async DeleteParkingZone(companyId:number,id:number):Promise<ParkingZone>{
+        const parkingZone=await this.prismaService.parkingZone.findFirst({where:{id:id,companyId:companyId}});
+        if(parkingZone===null){
+             throw new NotFoundException('There is no such parking zone,or no such parking zone for that parking');
+        }
+        return await this.prismaService.parkingZone.delete({where:{id:parkingZone.id}});
+
+    }
     
 }
