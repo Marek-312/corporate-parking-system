@@ -29,8 +29,8 @@ export class ParkingZonesController {
         return await this.service.GetAllParkingZones(req.user.companyId);
     }
     @Patch('parking-zones')
-    async updateParkingZone(@Request() req:AuthenticatedRequest,@Body() dto:ParkingZoneDTO):Promise<ParkingZone>{
-        return await this.service.UpdateParkingZone(req.user.userId,req.user.companyId,dto);
+    async updateParkingZone(@Request() req:AuthenticatedRequest,@Param('id', ParseIntPipe) id: number,@Body() dto:ParkingZoneDTO):Promise<ParkingZone>{
+        return await this.service.UpdateParkingZone(id,req.user.companyId,dto);
     }
 
     
