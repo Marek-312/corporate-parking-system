@@ -1,4 +1,4 @@
-import { Controller, Post,Body, UseGuards,Request, Get} from '@nestjs/common';
+import { Controller, Post,Body, UseGuards,Request, Get, Patch} from '@nestjs/common';
 import { ParkingZoneDTO } from './DTO/parking-zones-dto.js';
 import { ApiTags } from '@nestjs/swagger';
 import { ParkingZonesService } from './parking-zones.service.js';
@@ -25,8 +25,14 @@ export class ParkingZonesController {
         return await this.service.GetParkingZone(req.user.userId,req.user.companyId);
     }
     @Get('parking-zones')
+    async getAllParkingZones(@Request()req:AuthenticatedRequest):Promise<ParkingZone[]>{
+        return await this.service.GetAllParkingZones(req.user.companyId);
+    }
+    @Patch('parking-zones')
     async updateParkingZone(@Request() req:AuthenticatedRequest,@Body() dto:ParkingZoneDTO):Promise<ParkingZone>{
         return await this.service.UpdateParkingZone(req.user.userId,req.user.companyId,dto);
     }
+
+    
 
 }
