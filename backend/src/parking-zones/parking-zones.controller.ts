@@ -1,4 +1,4 @@
-import { Controller, Post,Body, UseGuards,Request, Get, Patch, ParseIntPipe,ValidationPipe} from '@nestjs/common';
+import { Controller, Post,Body, UseGuards,Request,Delete, Get, Patch, ParseIntPipe,ValidationPipe} from '@nestjs/common';
 import { ParkingZoneDTO } from './DTO/parking-zones-dto.js';
 import { ApiTags } from '@nestjs/swagger';
 import { ParkingZonesService } from './parking-zones.service.js';
@@ -16,23 +16,25 @@ interface AuthenticatedRequest {
 export class ParkingZonesController {
     constructor(private readonly service:ParkingZonesService){}
    
-    @Post('parking-zones')
+    @Post()
     async createParkingZone(@Request() req:AuthenticatedRequest ,@Body(ValidationPipe) dto:ParkingZoneDTO):Promise<ParkingZone>{
         return await this.service.CreateNewZone(req.user.companyId,dto);
     }
-    @Get(':id')
+    @Get()
     async getParkingZone(@Request() req:AuthenticatedRequest,@Param('id',ParseIntPipe)id:number):Promise<ParkingZone>{
-        return await this.service.GetParkingZone(id,req.user.companyId);
+        return await this.service.GetParkingZone(req.user.companyId,id);
     }
-    @Get(':id')
+    @Get()
     async getAllParkingZones(@Request()req:AuthenticatedRequest):Promise<ParkingZone[]>{
         return await this.service.GetAllParkingZones(req.user.companyId);
     }
-    @Patch(':id')
+    @Patch()
     async updateParkingZone(@Request() req:AuthenticatedRequest,@Param('id', ParseIntPipe) id: number,@Body(ValidationPipe) dto:ParkingZoneDTO):Promise<ParkingZone>{
-        return await this.service.UpdateParkingZone(id,req.user.companyId,dto);
+        return await this.service.UpdateParkingZone(req.user.companyId,id,dto);
     }
-
-    
+    @Delete()
+    async deleteParkingZone(@Request()req:AuthenticatedRequest,@Param('id',ParseIntPipe)id:number):Promise<ParkingZone>{
+        return await this.service.DeleteParkingZone(req.user.companyId,id);
+    }
 
 }
