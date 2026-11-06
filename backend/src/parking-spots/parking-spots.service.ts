@@ -58,6 +58,23 @@ export class ParkingSpotsService {
           return parkingSpots;
 
     }
+    async changeParkingSpot(companyID:number,zoneId:number,id:number,dto:ParkingSpotDTO){
+        const parkingSpot=await this.findParkingSpot(companyID,zoneId,id);
+       
+        const parkingSpot2=await this.prisma.parkingSpot.update({where:{
+            id:id,
+            zoneId:zoneId,
+        },
+            data:{
+                spotNumber:dto.spotNumber,
+                positionX:dto.positionX,
+                positionY:dto.positionY,
+                blockedStatus:dto.blockedStatus,
+                zoneId:parkingSpot.zoneId,
+            }
+        });
+        return parkingSpot2;
+    }
     async changeParkingSpotStatus(companyID:number,zoneId:number,id:number,status:SpotStatus){
         const parkingSpot=await this.findParkingSpot(companyID,zoneId,id);
         if(parkingSpot.blockedStatus===status){
