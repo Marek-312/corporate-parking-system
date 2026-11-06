@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { ParkingSpotDTO } from './DTO/parking-spots-dto.js';
-import { ParkingSpot } from '@prisma/client';
-
+import { ParkingSpot, SpotStatus } from '@prisma/client';
+import { ParkingZone } from '@prisma/client';
 @Injectable()
 export class ParkingSpotsService {
     constructor(private readonly prisma:PrismaService){}
@@ -57,6 +57,19 @@ export class ParkingSpotsService {
           }});
           return parkingSpots;
 
+    }
+    async changeParkingSpotStatus(companyID:number,zoneId:number,id:number,status:SpotStatus){
+        const parkingSpot=await this.findParkingSpot(companyID,zoneId,id);
+        if(parkingSpot.blockedStatus===status){
+            return parkingSpot;
+        }
+        const parkingSpot2=await this.prisma.parkingSpot.update({where:{
+            id:id,
+            zoneId:zoneId,
+        },data:{
+            blockedStatus:status,
+        }});
+        return parkingSpot2;
     }
 }
 
