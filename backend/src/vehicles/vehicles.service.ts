@@ -59,4 +59,21 @@ export class VehiclesService {
             id:foundVehice.id,
         }});
     }
+    async changeVehicle(userId:number,companyId:number,dto:VehicleDTO):Promise<Vehicle>{
+        const foundVehice=await this.findVehicle(userId,companyId);
+        if(!foundVehice){
+            
+            throw new NotFoundException("There is no such vehicle");
+        }
+ 
+        return await this.service.vehicle.update({where:{id:foundVehice.id},data:{
+        brand:dto.brand,
+        model:dto.model,
+        licensePlate:dto.licencePlate,
+        color:dto.color,
+        companyId:companyId,
+        driverId:userId,
+        }});   
+
+    }
 }
