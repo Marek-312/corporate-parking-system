@@ -31,5 +31,14 @@ export class VehiclesController {
     async findOne(@Request()req:AuthenticatedRequest,@Param('id',ParseIntPipe)id:number):Promise<VehicleDTO>{
         return await this.service.findOne(req.user.companyId,id);
     }
+    @Patch()
+    async updateVehicle(@Request() req: AuthenticatedRequest, @Body(ValidationPipe) dto: VehicleDTO):Promise<VehicleDTO>{
+        return await this.service.update(req.user.userId,req.user.companyId, dto);
+
+    }
+    @Delete(':id')
+    async removeVehicle(@Request()req:AuthenticatedRequest,@Param('id',ParseIntPipe)id:number):Promise<VehicleDTO>{
+        return await this.service.remove(req.user.companyId,id);
+    }
     
 }
