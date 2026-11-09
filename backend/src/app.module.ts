@@ -7,6 +7,7 @@ import { CompaniesModule } from './companies/companies.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { ParkingZonesModule } from './parking-zones/parking-zones.module.js';
+import { VehiclesModule } from './vehicles/vehicles.module.js';
 
 
 @Module({
@@ -19,6 +20,7 @@ import { ParkingZonesModule } from './parking-zones/parking-zones.module.js';
     PrismaModule,
     AuthModule,
     ParkingZonesModule,
+    VehiclesModule,
   ],
 })
 export class AppModule {}
