@@ -1,4 +1,4 @@
-import {Body,Param, Controller,Post,Delete,Get,Patch, ValidationPipe,Request, ParseIntPipe, UseGuards } from '@nestjs/common';
+import {Body,Param, Controller,Post,Delete,Get,Patch, ValidationPipe,Request, ParseIntPipe, UseGuards, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Vehicle } from '@prisma/client';
 import { VehicleDTO } from './DTO/vehicles-DTO.js';
@@ -18,9 +18,14 @@ export class VehiclesController {
         return await this.service.createVehicle(req.user.userId,req.user.companyId, dto);
 
     }
-    @Get(':pageNumber/:pageLimit')
-    async findAllVehicles(@Request()req:AuthenticatedRequest,@Param('pageNumber',ParseIntPipe)pageNumber:number,@Param('pageNumber',ParseIntPipe)limit:number,){
-        return await this.service.findAll(req.user.userId,pageNumber,limit);
+    @Get()
+    async findAllVehicles(@Request()req:AuthenticatedRequest,@Query('pageNumber')pageNumber:number,@Query('pageNumber')limit:number,){
+        return await this.service.findAll(req.user.companyId,pageNumber,limit);
+    }
+    @Get()
+    async findVehicleByPlaye(@Request()req:AuthenticatedRequest,@Query('plate')plate:string)
+    :Promise<VehicleDTO|null>{
+        return await this.service.findByPlate(req.user.companyId,plate);
     }
     
 }

@@ -43,7 +43,30 @@ export class VehiclesService {
             licensePlate:true,
             color:true
         }
-    });
+        });
+
     }
-    //TO DO CREATE SERVICES WICH RETURNS ALL THE VEHICLES IN THE COMPANY
+    async findByPlate(companyId:number,plate:string):Promise<VehicleDTO|null>{
+        const foundVeh=await this.service.vehicle.findFirst(
+            {
+                where:{
+                    companyId:companyId,
+                    licensePlate:plate,
+                },
+                select:{
+                    brand:true,
+                    model:true,
+                    licensePlate:true,
+                    color:true
+                }
+
+            });
+        if(foundVeh!){
+            throw new NotFoundException('There is no such vehicle in this company');
+
+        }
+        return foundVeh;
+    }
+    
+    //TE SERVICES WICH RETURNS ALL THE VEHICLES IN THE COMPANY
 }
