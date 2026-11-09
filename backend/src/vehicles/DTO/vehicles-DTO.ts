@@ -15,7 +15,7 @@ export class VehicleDTO{
     @IsNotEmpty() 
     @IsString()
     @ApiProperty()
-    licencePlate:string;
+    licensePlate:string;
 
     
     @IsNotEmpty() 

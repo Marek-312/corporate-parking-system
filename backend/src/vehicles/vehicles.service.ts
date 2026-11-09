@@ -2,79 +2,48 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { PrismaService } from '../prisma/prisma.service.js';
 import { Vehicle } from '@prisma/client';
 import { VehicleDTO } from './DTO/vehicles-DTO.js';
+
+
 @Injectable()
 export class VehiclesService {
     constructor(private readonly service:PrismaService){}
-    async createVehicle(userId:number,companyId:number,dto:VehicleDTO):Promise<Vehicle>{
-        return await this.service.vehicle.create({data:{
-        brand:dto.brand,
-        model:dto.model,
-        licensePlate:dto.licencePlate,
-        color:dto.color,
-        companyId:companyId,
-        driverId:userId,
-        }});   
-
-    }
-    async findVehicle(userId:number,companyId:number):Promise<Vehicle>{
-        const foundVehice=await this.service.vehicle.findFirst({where:{
+    private async checkPlateNum(companyId:number,plate:string){
+        const foundCar=await this.service.vehicle.findFirst({where:{
             companyId:companyId,
-            driverId:userId,
+            licensePlate:plate,
         }});
-        if(!foundVehice){
-            throw new NotFoundException("There is no such vehicle");
+        if(foundCar!){
+            throw new ConflictException('Wehicle with that plate already exists');
         }
-        return foundVehice;
 
     }
-    async findVehicleWithLicencePlate(userId:number,companyId:number,licensePlate:string):Promise<Vehicle>{
-        const foundVehice=await this.service.vehicle.findFirst({where:{
+    async createVehicle(driverId:number,companyId:number,dto:VehicleDTO):Promise<VehicleDTO>{
+        await this.checkPlateNum(companyId,dto.licensePlate);
+        await this.service.vehicle.create({
+            data:{
+                brand: dto.brand,
+                model: dto.model,
+                licensePlate: dto.licensePlate,
+                color: dto.color,
+                companyId,
+                driverId: driverId,
+            },}
+        );
+        return dto;
+    }
+    async findAll(companyId:number,pageNumber:number,limit:number):Promise<VehicleDTO[]>{//finds all the company vehiclse
+       return await this.service.vehicle.findMany({where:{
             companyId:companyId,
-            driverId:userId,
-            licensePlate:licensePlate
-        }});
-        if(!foundVehice){
-            throw new NotFoundException("There is no such vehicle");
+            skip: (pageNumber - 1) * limit,
+            take: limit
+        },
+        select:{
+            brand:true,
+            model:true,
+            licensePlate:true,
+            color:true
         }
-        return foundVehice;
-
+    });
     }
-     async deleteVehicleWithLicencePlate(userId:number,companyId:number,licensePlate:string):Promise<Vehicle>{
-        const foundVehice=await this.findVehicleWithLicencePlate(userId,companyId,licensePlate);
-        if(!foundVehice){
-            throw new NotFoundException("There is no such vehicle");
-        }
-        return await this.service.vehicle.delete({where:{
-            id:foundVehice.id,
-        }});
-    }
-    
-    
-     async deleteVehicle(userId:number,companyId:number):Promise<Vehicle>{
-        const foundVehice=await this.findVehicle(userId,companyId);
-        if(!foundVehice){
-            throw new NotFoundException("There is no such vehicle");
-        }
-        return await this.service.vehicle.delete({where:{
-            id:foundVehice.id,
-        }});
-    }
-    async changeVehicle(userId:number,companyId:number,dto:VehicleDTO):Promise<Vehicle>{
-        const foundVehice=await this.findVehicle(userId,companyId);
-        if(!foundVehice){
-            
-            throw new NotFoundException("There is no such vehicle");
-        }
- 
-        return await this.service.vehicle.update({where:{id:foundVehice.id},data:{
-        brand:dto.brand,
-        model:dto.model,
-        licensePlate:dto.licencePlate,
-        color:dto.color,
-        companyId:companyId,
-        driverId:userId,
-        }});   
-
-    }
-
+    //TO DO CREATE SERVICES WICH RETURNS ALL THE VEHICLES IN THE COMPANY
 }

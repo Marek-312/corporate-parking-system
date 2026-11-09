@@ -23,17 +23,17 @@ export class VehiclesController {
         return await this.service.findVehicle(req.user.userId,req.user.companyId);
 
     }
-    @Get('plate')
+    @Get(':plate')
     async FindAVehicleUsingLicencePlate(@Request()req:AuthenticatedRequest,@Param('plate')plate:string):Promise<Vehicle>{
         return await this.service.findVehicleWithLicencePlate(req.user.userId,req.user.companyId,plate);
 
     }
-    @Delete('plate')
+    @Delete(':plate')
     async DeleteVehicleWithALicencePlate(@Request()req:AuthenticatedRequest,@Param('plate')plate:string):Promise<Vehicle>{
          return await this.service.deleteVehicleWithLicencePlate(req.user.userId,req.user.companyId,plate);
 
     }
-    @Delete('plate')
+    @Delete(':plate')
     async DeleteVehicle(@Request()req:AuthenticatedRequest,@Param('plate')plate:string):Promise<Vehicle>{
          return await this.service.deleteVehicle(req.user.userId,req.user.companyId);
 
