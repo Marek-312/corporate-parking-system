@@ -39,5 +39,13 @@ export class VehiclesService {
         return foundVehice;
 
     }
-    
+     async deleteVehicleWithLicencePlate(userId:number,companyId:number,licensePlate:string):Promise<Vehicle>{
+        const foundVehice=await this.findVehicleWithLicencePlate(userId,companyId,licensePlate);
+        if(!foundVehice){
+            throw new NotFoundException("There is no such vehicle");
+        }
+        return await this.service.vehicle.delete({where:{
+            id:foundVehice.id,
+        }});
+    }
 }
