@@ -18,14 +18,18 @@ export class VehiclesController {
         return await this.service.createVehicle(req.user.userId,req.user.companyId, dto);
 
     }
-    @Get('plate')
+    @Get()
     async findAllVehicles(@Request()req:AuthenticatedRequest,@Query('pageNumber')pageNumber:number,@Query('pageNumber')limit:number,){
         return await this.service.findAll(req.user.companyId,pageNumber,limit);
     }
-    @Get()
+    @Get('Plate')
     async findVehicleByPlaye(@Request()req:AuthenticatedRequest,@Query('plate')plate:string)
-    :Promise<VehicleDTO|null>{
+    :Promise<VehicleDTO>{
         return await this.service.findByPlate(req.user.companyId,plate);
+    }
+    @Get(':id')
+    async findOne(@Request()req:AuthenticatedRequest,@Param('id',ParseIntPipe)id:number):Promise<VehicleDTO>{
+        return await this.service.findOne(req.user.companyId,id);
     }
     
 }
