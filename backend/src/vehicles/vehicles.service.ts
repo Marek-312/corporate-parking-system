@@ -48,4 +48,15 @@ export class VehiclesService {
             id:foundVehice.id,
         }});
     }
+    
+    
+     async deleteVehicle(userId:number,companyId:number):Promise<Vehicle>{
+        const foundVehice=await this.findVehicle(userId,companyId);
+        if(!foundVehice){
+            throw new NotFoundException("There is no such vehicle");
+        }
+        return await this.service.vehicle.delete({where:{
+            id:foundVehice.id,
+        }});
+    }
 }
