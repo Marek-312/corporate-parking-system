@@ -1,13 +1,14 @@
-import {Body,Param, Controller,Post,Delete,Get,Patch, ValidationPipe,Request, ParseIntPipe } from '@nestjs/common';
+import {Body,Param, Controller,Post,Delete,Get,Patch, ValidationPipe,Request, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Vehicle } from '@prisma/client';
 import { VehicleDTO } from './DTO/vehicles-DTO.js';
 import { VehiclesService } from './vehicles.service.js';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 interface AuthenticatedRequest {
   user: { userId: number; companyId: number; role: string };
 }
 
-
+@UseGuards(JwtAuthGuard)
 @Controller('vehicles')
 @ApiTags('vehicles')
 export class VehiclesController {
