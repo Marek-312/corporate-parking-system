@@ -18,7 +18,7 @@ export class VehiclesController {
         return await this.service.createVehicle(req.user.userId,req.user.companyId, dto);
 
     }
-    @Get()
+    @Get('plate')
     async findAllVehicles(@Request()req:AuthenticatedRequest,@Query('pageNumber')pageNumber:number,@Query('pageNumber')limit:number,){
         return await this.service.findAll(req.user.companyId,pageNumber,limit);
     }
