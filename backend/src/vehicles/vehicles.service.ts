@@ -46,7 +46,7 @@ export class VehiclesService {
         });
 
     }
-    async findByPlate(companyId:number,plate:string):Promise<VehicleDTO|null>{
+    async findByPlate(companyId:number,plate:string):Promise<VehicleDTO>{
         const foundVeh=await this.service.vehicle.findFirst(
             {
                 where:{
@@ -61,12 +61,35 @@ export class VehiclesService {
                 }
 
             });
-        if(foundVeh!){
+        if(!foundVeh){
             throw new NotFoundException('There is no such vehicle in this company');
 
         }
         return foundVeh;
     }
+    async findOne(companyId: number, id: number): Promise<VehicleDTO> {
+        const vehicle = await this.service.vehicle.findFirst({ where: { id, companyId } });
+        if (!vehicle) throw new NotFoundException('Vehicle not found');
+        return vehicle;
+    }
     
+    async update(companyId: number, id: number, dto: VehicleDTO): Promise<VehicleDTO> {
+        await this.findOne(companyId, id);
+        await this.checkPlateNum(companyId, dto.licensePlate);
+        return this.service.vehicle.update({
+        where: { id },
+        data: {
+            brand: dto.brand,
+            model: dto.model,
+            licensePlate: dto.licensePlate,
+            color: dto.color,
+        },
+        });
+    }
+
+   async remove(companyId: number, id: number): Promise<VehicleDTO> {
+        await this.findOne(companyId, id);
+        return this.service.vehicle.delete({ where: { id } });
+    }
     //TE SERVICES WICH RETURNS ALL THE VEHICLES IN THE COMPANY
 }
