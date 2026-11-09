@@ -1,8 +1,9 @@
-import { Controller, ParseIntPipe, UseGuards,Put, ValidationPipe ,Body,Param,Request,Post,Get, Req, Patch} from '@nestjs/common';
+import { Controller, ParseIntPipe, UseGuards,Put, ValidationPipe ,Body,Param,Request,Post,Get, Req, Patch, Delete} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ParkingSpotsService } from './parking-spots.service.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 import { ParkingSpotDTO } from './DTO/parking-spots-dto.js';
+import { ParkingSpot } from '@prisma/client';
 
 export interface AuthenticatedRequest {
   user: { userId: number; companyId: number; role: string };
@@ -17,7 +18,7 @@ export interface AuthenticatedRequest {
 export class ParkingSpotsController {
     constructor(private readonly service:ParkingSpotsService){}
     @Post()
-    async addParkingSpot(@Request() req:AuthenticatedRequest,@Param('zoneId',ParseIntPipe) zoneID:number,@Body(ValidationPipe) dto:ParkingSpotDTO):Promise<ParkingZOne>{
+    async addParkingSpot(@Request() req:AuthenticatedRequest,@Param('zoneId',ParseIntPipe) zoneID:number,@Body(ValidationPipe) dto:ParkingSpotDTO):Promise<ParkingSpot>{
         return await this.service.addParkingSpot(req.user.companyId,zoneID,dto);
         
     }
@@ -31,7 +32,7 @@ export class ParkingSpotsController {
         return await this.service.findAllParkingSpotsInthisField(req.user.companyId,zoneID);
     }
 
-    @Get(':id')
+    @Delete(':id')
     async deleteParkingSpot(@Request() req:AuthenticatedRequest,@Param('zoneId',ParseIntPipe) zoneID:number,@Param('id',ParseIntPipe)id:number):Promise<ParkingSpot>{
 
         return await this.service.deleteParkingSpot(req.user.companyId,zoneID,id);
