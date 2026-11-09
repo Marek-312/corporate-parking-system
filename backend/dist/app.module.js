@@ -13,6 +13,8 @@ import { CompaniesModule } from './companies/companies.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { ParkingZonesModule } from './parking-zones/parking-zones.module.js';
+import { VehiclesModule } from './vehicles/vehicles.module.js';
+import { ParkingSpotsModule } from './parking-spots/parking-spots.module.js';
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -26,6 +28,8 @@ AppModule = __decorate([
             PrismaModule,
             AuthModule,
             ParkingZonesModule,
+            VehiclesModule,
+            ParkingSpotsModule,
         ],
     })
 ], AppModule);
