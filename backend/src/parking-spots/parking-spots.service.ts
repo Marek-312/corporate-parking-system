@@ -39,7 +39,7 @@ export class ParkingSpotsService {
             id:id,zoneId:parkingZone.id,
         }});
         if(!parkSpot){
-            throw new NotFoundException("There is no such parking zone in this company");
+            throw new NotFoundException("There are no such parking spots");
         }
         return parkSpot;
     }

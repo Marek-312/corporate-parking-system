@@ -6,7 +6,7 @@ import { ParkingZone, User } from '@prisma/client';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 import { Param } from '@nestjs/common';
 
-interface AuthenticatedRequest {
+export interface AuthenticatedRequest {
   user: { userId: number; companyId: number; role: string };
 }
 
