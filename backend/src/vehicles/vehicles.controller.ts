@@ -14,34 +14,13 @@ interface AuthenticatedRequest {
 export class VehiclesController {
     constructor(private readonly service:VehiclesService){}
     @Post()
-    async CreateAVehicle(@Request() req:AuthenticatedRequest,@Body(ValidationPipe)dto:VehicleDTO):Promise<Vehicle>{
-        return await this.service.createVehicle(req.user.userId,req.user.companyId,dto);
+    async createVehicle(@Request() req: AuthenticatedRequest, @Body(ValidationPipe) dto: VehicleDTO):Promise<VehicleDTO>{
+        return await this.service.createVehicle(req.user.userId,req.user.companyId, dto);
 
     }
-    @Get()
-     async FindAVehicle(@Request() req:AuthenticatedRequest):Promise<Vehicle>{
-        return await this.service.findVehicle(req.user.userId,req.user.companyId);
-
-    }
-    @Get(':plate')
-    async FindAVehicleUsingLicencePlate(@Request()req:AuthenticatedRequest,@Param('plate')plate:string):Promise<Vehicle>{
-        return await this.service.findVehicleWithLicencePlate(req.user.userId,req.user.companyId,plate);
-
-    }
-    @Delete(':plate')
-    async DeleteVehicleWithALicencePlate(@Request()req:AuthenticatedRequest,@Param('plate')plate:string):Promise<Vehicle>{
-         return await this.service.deleteVehicleWithLicencePlate(req.user.userId,req.user.companyId,plate);
-
-    }
-    @Delete(':plate')
-    async DeleteVehicle(@Request()req:AuthenticatedRequest,@Param('plate')plate:string):Promise<Vehicle>{
-         return await this.service.deleteVehicle(req.user.userId,req.user.companyId);
-
-    }
-    @Patch()
-    async ChangeVehicle(@Request() req:AuthenticatedRequest,@Body(ValidationPipe)dto:VehicleDTO):Promise<Vehicle>{
-        return await this.service.changeVehicle(req.user.userId,req.user.companyId,dto);
-
+    @Get(':pageNumber/:pageLimit')
+    async findAllVehicles(@Request()req:AuthenticatedRequest,@Param('pageNumber',ParseIntPipe)pageNumber:number,@Param('pageNumber',ParseIntPipe)limit:number,){
+        return await this.service.findAll(req.user.userId,pageNumber,limit);
     }
     
 }
