@@ -1,7 +1,7 @@
-import { Controller,Post,Patch, ParseIntPipe} from '@nestjs/common';
+import { Controller,Post,Patch, ParseIntPipe,Get} from '@nestjs/common';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
-import { Request,Param } from '@nestjs/common';
+import { Request,Param,Query } from '@nestjs/common';
 import { VehicleDTO } from '../vehicles/DTO/vehicles-DTO.js';
 import { ParkingSession } from '@prisma/client';
 import { ParkingSessionsService } from './parking-sessions.service.js';
@@ -35,5 +35,10 @@ export class ParkingSessionsController {
 
         return await this.service.unparkTheCarFromTheSpot(req.user.companyId,zoneId,spotId);
     
+    }
+    @Get('FindAll')
+    async getAllSessions(@Request()req:AuthenticatedRequest,@Query('pageNumber')pageNumber:number,@Query('pageNumber')limit:number,){
+        
+        return await this.service.findAll(req.user.companyId,pageNumber,limit);
     }
 }
