@@ -10,6 +10,7 @@ import { ParkingZonesModule } from './parking-zones/parking-zones.module.js';
 
 import { VehiclesModule } from './vehicles/vehicles.module.js';
 import { ParkingSpotsModule } from './parking-spots/parking-spots.module.js';
+import { ParkingSessionsModule } from './parking-sessions/parking-sessions.module.js';
 
 
 
@@ -25,6 +26,7 @@ import { ParkingSpotsModule } from './parking-spots/parking-spots.module.js';
     ParkingZonesModule,
   VehiclesModule,
     ParkingSpotsModule,
+    ParkingSessionsModule,
   ],
 })
 export class AppModule {}
