@@ -18,6 +18,16 @@ export class ParkingSessionsService {
                 }
                 //checking wheteer the car is already parked there
                 //zone security check
+
+
+                const existingZone=await tx.parkingZone.findUnique({where:{id:zoneId,
+                    companyId:companyId,
+
+                }})
+                if(!existingZone){
+                    throw new NotFoundException(`There is no such zone in this company`);
+                }
+
                 
                 const parkingSessionForCar=await tx.parkingSession.findFirst({where:{vehicleId:vehicleId}});
                 if(parkingSessionForCar){
