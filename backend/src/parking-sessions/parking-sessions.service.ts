@@ -41,8 +41,7 @@ export class ParkingSessionsService {
         }
          await this.service.parkingSession.create({
             data:{
-            entryTime:dto.entryTime,
-            exitTime:dto.entryTime,
+ 
             spotId:spotId,
             vehicleId:vehicleId
             }
@@ -57,36 +56,17 @@ export class ParkingSessionsService {
         });
         return dto;
     }
-    async unparkTheCarFromTheSpot(spotID:number):Promise<ParkingSession>{
-        const foundSpot=await this.service.parkingSpot.findUnique({where:{id:spotID}});
-        if(!foundSpot){
-            throw new NotFoundException("THere is no such parking spot");
-        }
-        if(foundSpot.blockedStatus===SpotStatus.FREE){
-            throw new ConflictException("This spot is already free");
-        }
-        const ps=await this.service.parkingSession.findFirst({where:{
-                spotId:spotID,
-            }
-        });
-        if(!ps){
-             throw new NotFoundException("THere is no session for this spot");
-        }
-        await this.service.parkingSpot.update({where:{
-            id:spotID,
-            },
-            data:{
-                blockedStatus:SpotStatus.FREE,
-            }
-        })
-        return await this.service.parkingSession.update({
-            where:{
-                id:ps.id
-            },
-            data:{
-                exitTime:Date.now.toString(),
-            }
-        });
+   async unparkTheCarFromTheSpot(companyId: number, zoneId: number, spotId: number): Promise<ParkingSession> {
+  const session = await this.service.parkingSession.findFirst({
+    where: { spotId, exitTime: null, spot: { zoneId, zone: { companyId } } },
+  });
+  if (!session) throw new NotFoundException('There is no active session on this spot');
+
+  return this.service.parkingSession.update({
+    where: { id: session.id },
+    data: { exitTime: new Date() },
+  });
+
     }
      async findAll(companyId: number, page:number,limit:number) {
         const where = { spot: { zone: { companyId } } };
