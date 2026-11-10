@@ -7,7 +7,7 @@ import { create } from 'domain';
 export class ParkingSessionsService {
     constructor(private readonly service:PrismaService){}
     
-    async parkTheCar(companyId:number,zoneId:number,spotId:number,vehicleId:number,dto:ParkingSesssionDTO):Promise<ParkingSesssionDTO>{
+    async parkTheCar(companyId:number,zoneId:number,spotId:number,vehicleId:number,dto:ParkingSesssionDTO):Promise<ParkingSesssion>{
         //no need for checking the company existence
         const existingZone=await this.service.parkingZone.findUnique({
             where:{
@@ -39,13 +39,7 @@ export class ParkingSessionsService {
         if(existingSpot.blockedStatus!=SpotStatus.FREE){
             throw new ConflictException(`This parking spot is ${existingSpot.blockedStatus}`);
         }
-         await this.service.parkingSession.create({
-            data:{
- 
-            spotId:spotId,
-            vehicleId:vehicleId
-            }
-        });
+       
         await this.service.parkingSpot.update({
             where:{
                 id:spotId
@@ -54,18 +48,24 @@ export class ParkingSessionsService {
                 blockedStatus:SpotStatus.RESERVED
             }
         });
-        return dto;
+        return   await this.service.parkingSession.create({
+            data:{
+ 
+            spotId:spotId,
+            vehicleId:vehicleId
+            }
+        });;
     }
    async unparkTheCarFromTheSpot(companyId: number, zoneId: number, spotId: number): Promise<ParkingSession> {
-  const session = await this.service.parkingSession.findFirst({
-    where: { spotId, exitTime: null, spot: { zoneId, zone: { companyId } } },
-  });
-  if (!session) throw new NotFoundException('There is no active session on this spot');
+    const session = await this.service.parkingSession.findFirst({
+        where: { spotId, exitTime: null, spot: { zoneId, zone: { companyId } } },
+    });
+    if (!session) throw new NotFoundException('There is no active session on this spot');
 
-  return this.service.parkingSession.update({
-    where: { id: session.id },
-    data: { exitTime: new Date() },
-  });
+    return this.service.parkingSession.update({
+        where: { id: session.id },
+        data: { exitTime: new Date() },
+    });
 
     }
      async findAll(companyId: number, page:number,limit:number) {
