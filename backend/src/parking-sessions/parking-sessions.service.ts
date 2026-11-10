@@ -41,7 +41,7 @@ export class ParkingSessionsService {
                 }
                 //checking if the cars not already parked
                 const parkingSessionForCar=await tx.parkingSession.findFirst({where:{
-                    vehicle:{id:vehicleId,companyId:companyId}
+                    vehicle:{id:vehicleId,companyId:companyId},exitTime:null
                 }});
                 if(parkingSessionForCar){
                     throw new ConflictException(`This car is already parked in this company`);
@@ -59,19 +59,20 @@ export class ParkingSessionsService {
             }
         );
     }
+
    async unparkTheCarFromTheSpot(companyId: number, zoneId: number, spotId: number): Promise<ParkingSession> {
-    const session = await this.service.parkingSession.findFirst({
-        where: { spotId, exitTime: null, spot: { zoneId, zone: { companyId } } },
-    });
-    if (!session) throw new NotFoundException('There is no active session on this spot');
+        const session = await this.service.parkingSession.findFirst({
+            where: { spotId, exitTime: null, spot: { zoneId, zone: { companyId } } },
+        });
+        if (!session) throw new NotFoundException('There is no active session on this spot');
 
-    return this.service.parkingSession.update({
-        where: { id: session.id },
-        data: { exitTime: new Date() },
-    });
+        return this.service.parkingSession.update({
+            where: { id: session.id },
+            data: { exitTime: new Date() },
+        });
 
-    }
-     async findAll(companyId: number, page:number,limit:number) {
+        }
+    async findAll(companyId: number, page:number,limit:number) {
         const where = { spot: { zone: { companyId } } };
         const [data, total] = await this.service.$transaction([
         this.service.parkingSession.findMany({
@@ -85,7 +86,7 @@ export class ParkingSessionsService {
         ]);
         return { data, total, page, limit };
     }
-
+   
 
     
 }
