@@ -14,7 +14,7 @@ interface AuthenticatedRequest {
 export class ParkingSessionsController {
     constructor(private readonly service:ParkingSessionsService){}
     
-    @Patch('park/:zoneId/:spotId/vehicleId')
+    @Post('park/:zoneId/:spotId/vehicleId')
     async  park(
     @Request()req:AuthenticatedRequest
     ,@Param('zoneId',ParseIntPipe)zoneId:number,
@@ -23,6 +23,17 @@ export class ParkingSessionsController {
     ):Promise<ParkingSession>{
 
         return await this.service.parkTheCar(req.user.companyId,zoneId,spotId,vehicleId);
+    
+    }
+
+    @Patch('unpark/:zoneId/:spotId/vehicleId')
+    async  unpark(
+    @Request()req:AuthenticatedRequest
+    ,@Param('zoneId',ParseIntPipe)zoneId:number,
+    @Param('spotId',ParseIntPipe)spotId:number
+    ):Promise<ParkingSession>{
+
+        return await this.service.unparkTheCarFromTheSpot(req.user.companyId,zoneId,spotId);
     
     }
 }
