@@ -2,8 +2,8 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { PrismaService } from '../prisma/prisma.service.js';
 import { ParkingSesssionDTO } from './DTO/parking-session-dto.js';
 import { ParkingSession, SpotStatus } from '@prisma/client';
-import { create } from 'domain';
-import { ConfigModule } from '@nestjs/config';
+
+
 @Injectable()
 export class ParkingSessionsService {
     constructor(private readonly service:PrismaService){}
