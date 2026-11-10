@@ -88,6 +88,20 @@ export class ParkingSessionsService {
             }
         });
     }
+     async findAll(companyId: number, page:number,limit:number) {
+        const where = { spot: { zone: { companyId } } };
+        const [data, total] = await this.service.$transaction([
+        this.service.parkingSession.findMany({
+            where,
+            include: { vehicle: true, spot: true },
+            orderBy: { entryTime: 'desc' },
+            skip: (page - 1) * limit,
+            take: limit,
+        }),
+        this.service.parkingSession.count({ where }),
+        ]);
+        return { data, total, page, limit };
+    }
 
 
     
