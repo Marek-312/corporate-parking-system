@@ -8,7 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 export class ParkingSessionsService {
     constructor(private readonly service:PrismaService){}
     
-    async parkTheCar(companyId:number,zoneId:number,spotId:number,vehicleId:number,dto:ParkingSesssionDTO):Promise<ParkingSesssion>{
+    async parkTheCar(companyId:number,zoneId:number,spotId:number,vehicleId:number):Promise<ParkingSession>{
         //no need for checking the company existence
         return this.service.$transaction(async (tx)=>{
                 //company check
@@ -28,20 +28,32 @@ export class ParkingSessionsService {
                     throw new NotFoundException(`There is no such zone in this company`);
                 }
 
-                
-                const parkingSessionForCar=await tx.parkingSession.findFirst({where:{vehicleId:vehicleId}});
-                if(parkingSessionForCar){
-                    throw new ConflictException(`This car is already parked in this company`);
-                }
-                //checking if spot is taken and that it exists
-                const parkingSpot=await tx.parkingSpot.findFirst({where:{id:spotId}});
-                if(parkingSpot!){
+                //parking spot secuirity check
+                const parkingSpot=await tx.parkingSpot.findFirst({where:{id:spotId,
+                    zoneId:existingZone.id
+                }});
+                if(!parkingSpot){
                     throw new NotFoundException(`There is no such parking spot`);
 
                 }
                 if(parkingSpot!.blockedStatus!=SpotStatus.FREE){
                     throw new ConflictException(`This spot is taken`);
                 }
+                //checking if the cars not already parked
+                const parkingSessionForCar=await tx.parkingSession.findFirst({where:{
+                    vehicle:{id:vehicleId,companyId:companyId}
+                }});
+                if(parkingSessionForCar){
+                    throw new ConflictException(`This car is already parked in this company`);
+                }
+                //from this point on we are sure that there are no conflicts and that we can create a new session
+                const newParkingSession=await tx.parkingSession.create({data:{
+                    spotId:spotId,
+                    vehicleId:vehicleId,
+             
+                }});
+                return newParkingSession;
+              
                 
 
             }
