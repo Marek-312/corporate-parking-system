@@ -11,15 +11,16 @@ export class ParkingSessionsService {
     async parkTheCar(companyId:number,zoneId:number,spotId:number,vehicleId:number):Promise<ParkingSession>{
         //no need for checking the company existence
         return this.service.$transaction(async (tx)=>{
-                //company check
-                const existingCompany=await tx.company.findUnique({where:{id:companyId}});
-                if(!existingCompany){
-                    throw new NotFoundException(`This company does not exist`);
-                }
+                
                 //checking wheteer the car is already parked there
                 //zone security check
 
-
+                const existingVehicle=await tx.vehicle.findFirst({where:{
+                    id:vehicleId
+                }});
+                if(!existingVehicle){
+                    throw new ConflictException("There is no such vehicle in this company");
+                }
                 const existingZone=await tx.parkingZone.findUnique({where:{id:zoneId,
                     companyId:companyId,
 
@@ -45,6 +46,13 @@ export class ParkingSessionsService {
                 }});
                 if(parkingSessionForCar){
                     throw new ConflictException(`This car is already parked in this company`);
+                }
+                //checking if the  spot is not taken
+                const parkingSessionSpot=await tx.parkingSession.findFirst({
+                    where:{spotId:spotId,companyId:companyId,exitTime:null}
+                });
+                if(parkingSessionSpot){
+                    throw new ConflictException("This spot is already taken");
                 }
                 //from this point on we are sure that there are no conflicts and that we can create a new session
                 const newParkingSession=await tx.parkingSession.create({data:{
