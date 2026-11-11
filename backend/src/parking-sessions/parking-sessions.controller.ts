@@ -36,7 +36,7 @@ export class ParkingSessionsController {
         return await this.service.unparkTheCarFromTheSpot(req.user.companyId,zoneId,spotId);
     
     }
-    @Get('FindAll')
+    @Get()
     async getAllSessions(@Request()req:AuthenticatedRequest,@Query('pageNumber')pageNumber:number,@Query('limit')limit:number,){
         
         return await this.service.findAll(req.user.companyId,pageNumber,limit);
