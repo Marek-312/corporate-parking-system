@@ -14,7 +14,7 @@ interface AuthenticatedRequest {
 export class ParkingSessionsController {
     constructor(private readonly service:ParkingSessionsService){}
     
-    @Post('park/:zoneId/:spotId/vehicleId')
+    @Post('park/:zoneId/:spotId/:vehicleId')
     async  park(
     @Request()req:AuthenticatedRequest
     ,@Param('zoneId',ParseIntPipe)zoneId:number,
@@ -26,7 +26,7 @@ export class ParkingSessionsController {
     
     }
 
-    @Patch('unpark/:zoneId/:spotId/vehicleId')
+    @Patch('unpark/:zoneId/:spotId/:vehicleId')
     async  unpark(
     @Request()req:AuthenticatedRequest
     ,@Param('zoneId',ParseIntPipe)zoneId:number,
@@ -37,7 +37,7 @@ export class ParkingSessionsController {
     
     }
     @Get('FindAll')
-    async getAllSessions(@Request()req:AuthenticatedRequest,@Query('pageNumber')pageNumber:number,@Query('pageNumber')limit:number,){
+    async getAllSessions(@Request()req:AuthenticatedRequest,@Query('pageNumber')pageNumber:number,@Query('limit')limit:number,){
         
         return await this.service.findAll(req.user.companyId,pageNumber,limit);
     }
