@@ -15,6 +15,7 @@ import { AuthModule } from './auth/auth.module.js';
 import { ParkingZonesModule } from './parking-zones/parking-zones.module.js';
 import { VehiclesModule } from './vehicles/vehicles.module.js';
 import { ParkingSpotsModule } from './parking-spots/parking-spots.module.js';
+import { ParkingSessionsModule } from './parking-sessions/parking-sessions.module.js';
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -30,6 +31,7 @@ AppModule = __decorate([
             ParkingZonesModule,
             VehiclesModule,
             ParkingSpotsModule,
+            ParkingSessionsModule,
         ],
     })
 ], AppModule);
