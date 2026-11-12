@@ -1,5 +1,10 @@
-export interface AuthUser {
-  userId: number;
-  companyId: number;
-  role: string;
+export interface LoginDto {
+  email:string,
+  password:string
+}
+export interface RegisterDto{
+  email:string,
+  password:string,
+  name:string,
+  companyId:number
 }
