@@ -8,3 +8,9 @@ export interface RegisterDto{
   name:string,
   companyId:number
 }
+export enum Role{
+  SUPER_ADMIN,
+  COMPANY_ADMIN,
+  EMPLOYEE
+
+}
