@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { environment } from '../../../../../environments/environments';
-
+import { LoginDto } from '../../Models/auth.model';
 interface AuthResponse {
   accessToken: string;
 }
@@ -14,9 +14,9 @@ export class AuthService {
   private readonly router = inject(Router);
   private readonly tokenKey = 'access_token';
 
-  login(email: string, password: string) {
+  login(dto:LoginDto) {
     return this.http
-      .post<AuthResponse>(`${environment.apiUrl}/auth/login`, { email, password })
+      .post<AuthResponse>(`${environment.apiUrl}/auth/login`, { dto })
       .pipe(tap((res) => localStorage.setItem(this.tokenKey, res.accessToken)));
   }
 
