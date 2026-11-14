@@ -26,6 +26,14 @@ export class AuthService{
 
     }
 
+
+    me() {
+    return this.http.get<AuthUser>(`${environment.apiUrl}/auth/me`);
+  }
+
+
+
+  
     logout(): void {
         localStorage.removeItem(this.tokenKey);
         this.router.navigate(['/login']);
