@@ -1,9 +1,13 @@
-import { Component } from '@angular/core';
+import { AsyncPipe, JsonPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { AuthService } from '../../auth.service';
 
 @Component({
-  imports: [],
   selector: 'app-dashboard',
-  styleUrl: './dashboard.css',
+  imports: [AsyncPipe, JsonPipe],
   templateUrl: './dashboard.html',
 })
-export class Dashboard {}
+export class Dashboard {
+  protected readonly auth = inject(AuthService);
+  protected readonly me$ = this.auth.me();
+}
