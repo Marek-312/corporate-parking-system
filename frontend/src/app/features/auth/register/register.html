@@ -1,1 +1,13 @@
-<p>register works!</p>
+<form [formGroup]='form' (ngSubmit)='submit()'>
+    <h2>Register your company</h2>
+    <input formControlName='name' placeholder='Your name' />
+    <input formControlName='email' type='email' placeholder='Email' />
+    <input formControlName='password' type='password' placeholder='Password (min 8)' />
+    <input formControlName='companyName' placeholder='Company name' />
+    <input formControlName='taxNumber' placeholder='Tax number' />
+    <button type='submit' [disabled]='form.invalid'>Register</button>
+    @if (error()) {
+    <p>{{ error() }}</p>
+    }
+    <a routerLink='/login'>I already have an account</a>
+</form>
