@@ -31,7 +31,7 @@ export class Register {
   submit():void{
     this.auth.register(this.form.getRawValue()).subscribe({
       next:()=>this.router.navigate(['/login']),
-      error:(err)=>this.error.set(err.error?.message?? 'Registration failed');
+      error:(err)=>this.error.set(err.error?.message?? 'Registration failed'),
       
     })
   }
