@@ -5,14 +5,21 @@ import { Request,Param,Query } from '@nestjs/common';
 import { VehicleDTO } from '../vehicles/DTO/vehicles-DTO.js';
 import { ParkingSession } from '@prisma/client';
 import { ParkingSessionsService } from './parking-sessions.service.js';
+import {ApiBearerAuth}from '@nestjs/swagger'
+
+
+
+
 interface AuthenticatedRequest {
   user: { userId: number; companyId: number; role: string };
 }
 
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('parking-sessions')
 export class ParkingSessionsController {
     constructor(private readonly service:ParkingSessionsService){}
+    
     
     @Post('park/:zoneId/:spotId/:vehicleId')
     async  park(
@@ -25,6 +32,7 @@ export class ParkingSessionsController {
         return await this.service.parkTheCar(req.user.companyId,zoneId,spotId,vehicleId);
     
     }
+
 
     @Patch('unpark/:zoneId/:spotId/:vehicleId')
     async  unpark(
