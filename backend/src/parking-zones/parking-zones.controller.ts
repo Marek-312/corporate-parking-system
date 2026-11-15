@@ -1,6 +1,6 @@
 import { Controller, Post,Body, UseGuards,Request,Delete, Get, Patch, ParseIntPipe,ValidationPipe} from '@nestjs/common';
 import { ParkingZoneDTO } from './DTO/parking-zones-dto.js';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags,ApiBearerAuth } from '@nestjs/swagger';
 import { ParkingZonesService } from './parking-zones.service.js';
 import { ParkingZone, User } from '@prisma/client';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
@@ -12,7 +12,7 @@ import {Roles} from '../common/roles.decorator.js'
 export interface AuthenticatedRequest {
   user: { userId: number; companyId: number; role: string };
 }
-
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard,RolesGuard)
 @Controller('parking-zones')
 @ApiTags('parking-zones')
@@ -24,7 +24,7 @@ export class ParkingZonesController {
     async createParkingZone(@Request() req:AuthenticatedRequest ,@Body(ValidationPipe) dto:ParkingZoneDTO):Promise<ParkingZone>{
         return await this.service.CreateNewZone(req.user.companyId,dto);
     }
-    @Get()
+    @Get('single')
     async getParkingZone(@Request() req:AuthenticatedRequest,@Param('id',ParseIntPipe)id:number):Promise<ParkingZone>{
         return await this.service.GetParkingZone(req.user.companyId,id);
     }
