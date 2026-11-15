@@ -4,10 +4,13 @@ import { Vehicle } from '@prisma/client';
 import { VehicleDTO } from './DTO/vehicles-DTO.js';
 import { VehiclesService } from './vehicles.service.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
+import {ApiBearerAuth} from '@nestjs/swagger'
+
 interface AuthenticatedRequest {
   user: { userId: number; companyId: number; role: string };
 }
 
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('vehicles')
 @ApiTags('vehicles')
